@@ -1,69 +1,28 @@
-import React from 'react';
-import Button from './Button.js';
-import Card from './Card.js';
-import NavBar from './NavBar.js';
-import Jumbotron from './Jumbotron.js';
+import React, { useState } from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import AppContext from './AppContext';
+import LandingPage from './LandingPage';
+import LoginPage from './LoginPage';
 import './App.css';
 
-const products = [
-  {
-    brand: 'iPhone 11 Pro',
-    description: 'Lots to love. Less to spend. Starting at $399. From nine dollars and fifty four cents per month or two hundred and twenty nine dollars with trade in.From $9.54/mo. or $229 with trade-in.*',
-    image: "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
-  },
-  {
-    brand: 'Samsung S20',
-    description: 'Lots to love. Less to spend. Starting at $399. From nine dollars and fifty four cents per month or two hundred and twenty nine dollars with trade in.From $9.54/mo. or $229 with trade-in.*',
-    image: "https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&w=1810&q=80"
-  },
-  {
-    brand: 'Huwaei P40 Pro',
-    description: 'Lots to love. Less to spend. Starting at $399. From nine dollars and fifty four cents per month or two hundred and twenty nine dollars with trade in.From $9.54/mo. or $229 with trade-in.*',
-    image: "https://images.unsplash.com/photo-1564583138697-34f7b7488f94?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1949&q=80"
-  }
-]
-
 const App = () => {
+
+  const [globalState, setGlobalState] = useState({
+    loggedIn: localStorage.getItem('jwt') ? true : false,
+    user: null
+  });
+
   return (
-    <div>
-        <NavBar />
-        <Jumbotron 
-          title="Newsletter" 
-          description="Enter your email below to register">
 
-          <div className="input-group mb-3">
-            <input type="text" className="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2" />
-            <div className="input-group-append">
-              <button className="btn btn-outline-secondary" type="button" id="button-addon2">
-              Button</button>
-              </div>
-          </div>
-        </Jumbotron>
-
-        <Jumbotron 
-          title="Featured Products" 
-          description="Check out these latest trendy items">
-
-        <div className="row">
-          {
-            products.map(
-              (product)=>
-                <div className="col-lg-4 col-sm-6">
-                  <Card
-                    title={product.brand}
-                    description={product.description}
-                    image={product.image}
-                    buttonLabel="Buy"
-                    buttonLink="#"
-                  />
-                </div>
-            )
-          }
-          </div>
-        </Jumbotron>
-
-  </div>
-  );
+    <AppContext.Provider value={[globalState, setGlobalState]}>
+      <BrowserRouter>
+        <Switch>
+          <Route path="/" exact={true} component={LandingPage}/>
+          <Route path="/login" exact={true} component={LoginPage}/>
+        </Switch>
+      </BrowserRouter>
+    </AppContext.Provider>
+  )
 }
 
 export default App;
