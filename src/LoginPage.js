@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import AppContext from './AppContext';
 import NavBar from './NavBar.js';
 
@@ -22,9 +22,9 @@ const LoginPage = () => {
     const loginUser = () => {
 
         // Start loading
-        setState({...state, loading: true})
+        setState({...state, loading: true});
 
-        fetch('http://localhost:8081/users/login', 
+        fetch('http://localhost:8080/users/login', 
             {
                 method: 'POST',
                 body: JSON.stringify({
@@ -40,6 +40,8 @@ const LoginPage = () => {
         .then (
             (json) => {
                 const { message, jsonwebtoken } = json;
+
+                // If web token exists (meaning login was successful)
                 if(jsonwebtoken) {
                     // update the globalState
                     setGlobalState(
@@ -52,6 +54,7 @@ const LoginPage = () => {
                     // save the jwt in the browser
                     localStorage.setItem('jwt', jsonwebtoken);
 
+                    // turn off the preloader 
                     setState({...state, loading: false})
                 } else {
                     // throw an error
@@ -93,7 +96,7 @@ const LoginPage = () => {
                                     <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
                                 </div>
                                 <div className="form-group">
-                                    <label for="exampleInputPassword1">Password</label>
+                                    <label htmlFor="exampleInputPassword1">Password</label>
 
                                     <input 
                                     ref={(comp)=> passwordField = comp }
@@ -108,7 +111,17 @@ const LoginPage = () => {
                                 type="button"
                                 className="btn btn-primary">Login</button>
 
-                                { state.loading && <p>Loading...</p> }
+
+                                <p><br/>If you're not a registered user, click <Link to="/register">here</Link> to create an account</p>
+
+                                {
+                                 state.loading && 
+                                 <div className="loader">
+                                    <svg className="circular" viewBox="25 25 50 50">
+                                        <circle className="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
+                                    </svg>
+                                </div>
+                                 }
                         </div>
                     </div>
                 </div>

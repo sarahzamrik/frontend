@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import AppContext from './AppContext';
 import LandingPage from './LandingPage';
 import LoginPage from './LoginPage';
+import RegistrationPage from './RegistrationPage';
 import './App.css';
 
 const App = () => {
@@ -19,10 +20,12 @@ const App = () => {
         <Switch>
           <Route path="/" exact={true} component={LandingPage}/>
           <Route path="/login" exact={true} component={LoginPage}/>
+          <Route path="/register" exact={true} component={RegistrationPage}/>
         </Switch>
       </BrowserRouter>
     </AppContext.Provider>
   )
 }
+
 
 export default App;
