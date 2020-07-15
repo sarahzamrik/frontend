@@ -71,7 +71,7 @@ const RegistrationPage = () => {
             )
         }
 
-        fetch('http://localhost:8080/users/register', {
+        fetch('http://localhost:8081/users/register', {
             method: 'POST',
             body: JSON.stringify({
                 firstName: firstNameField.value,
@@ -79,7 +79,10 @@ const RegistrationPage = () => {
                 email: emailField.value,
                 password: passwordField.value
             }),
-            headers: {"Content-Type": "application/json"}
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem('jwt')}`
+              }
         })
         .then(
             (response)=>response.json()

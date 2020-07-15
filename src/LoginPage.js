@@ -24,7 +24,7 @@ const LoginPage = () => {
         // Start loading
         setState({...state, loading: true});
 
-        fetch('http://localhost:8080/users/login', 
+        fetch('http://localhost:8081/users/login', 
             {
                 method: 'POST',
                 body: JSON.stringify({

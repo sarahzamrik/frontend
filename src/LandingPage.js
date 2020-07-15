@@ -1,30 +1,43 @@
-import React from 'react';
-import Button from './Button.js';
-import ColorButton from './ColorButton.js';
+import React, { useContext, useEffect, useState } from 'react';
+import AppContext from './AppContext';
 import Card from './Card.js';
 import Jumbotron from './Jumbotron.js';
 import NavBar from './NavBar.js';
 import NewsletterForm from './NewsletterForm.js';
 
-const products = [
-  {
-    brand: 'iPhone 11 Pro',
-    description: 'Lots to love. Less to spend. Starting at $399. From nine dollars and fifty four cents per month or two hundred and twenty nine dollars with trade in.From $9.54/mo. or $229 with trade-in.*',
-    image: "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
-  },
-  {
-    brand: 'Samsung S20',
-    description: 'Lots to love. Less to spend. Starting at $399. From nine dollars and fifty four cents per month or two hundred and twenty nine dollars with trade in.From $9.54/mo. or $229 with trade-in.*',
-    image: "https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&w=1810&q=80"
-  },
-  {
-    brand: 'Huwaei P40 Pro',
-    description: 'Lots to love. Less to spend. Starting at $399. From nine dollars and fifty four cents per month or two hundred and twenty nine dollars with trade in.From $9.54/mo. or $229 with trade-in.*',
-    image: "https://images.unsplash.com/photo-1564583138697-34f7b7488f94?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1949&q=80"
-  }
-]
+// 1. Connect to the globalState
+// 2. Conditionally render the cards
+// 3. Use the useEffect() to subscribe to the globalState.loggedIn
+// 4. If globalState.loggedIn is true, fetch products from db
 
 const LandingPage = () => {
+
+const [globalState, setGlobalState] = useContext(AppContext);
+const [state, setState] = useState({ products: []});
+
+  useEffect(
+    () => {
+      // only fetch products if and when the user logs in
+      if(globalState.loggedIn === true) {
+        fetch('http://localhost:8081/products')
+        .then(
+          (result)=>result.json()
+        )
+        .then (
+          (json)=> {
+            setState(
+              {
+                ...state,
+                products: json.products
+              }
+            )
+          }
+        );
+      }
+    },
+    [ globalState.loggedIn ]
+  );
+
   return (
     <div>
         <NavBar />
@@ -42,7 +55,8 @@ const LandingPage = () => {
 
         <div className="row">
           {
-            products.map(
+            globalState.loggedIn === true &&
+            state.products.map(
               (product)=>
                 <div className="col-lg-4 col-sm-6">
                   <Card
@@ -52,11 +66,17 @@ const LandingPage = () => {
                     buttonLabel="Buy"
                     buttonLink="#"
                   />
-                </div>
-            )
+                </div>)
           }
-          </div>
-        </Jumbotron>
+
+          {
+          globalState.loggedIn === false &&
+            <div className="col-lg-4 col-sm-6">
+              <p>Please login to see the exclusive products.</p>
+            </div>
+          }
+    </div>
+    </Jumbotron>
     </div>
   );
 }
