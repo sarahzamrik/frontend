@@ -19,7 +19,7 @@ const [state, setState] = useState({ products: []});
     () => {
       // only fetch products if and when the user logs in
       if(globalState.loggedIn === true) {
-        fetch('http://localhost:8081/products')
+        fetch(`${process.env.REACT_APP_API_URL}products`)
         .then(
           (result)=>result.json()
         )

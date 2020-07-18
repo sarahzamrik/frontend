@@ -14,7 +14,7 @@ const NewsletterForm = () => {
 
     const registerEmail = () => {
         //console.log(inputField.value)
-        fetch('http://localhost:8081/emails/register', 
+        fetch(`${process.env.REACT_APP_API_URL}emails/register`, 
             {
                 method: 'POST',
                 body: JSON.stringify({email: inputField.value}),
